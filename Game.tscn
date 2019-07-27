@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://script/Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/pixel_ship_blue.png" type="Texture" id=2]
@@ -9,7 +9,8 @@
 [ext_resource path="res://assets/thruster-5.png" type="Texture" id=7]
 [ext_resource path="res://script/Background.gd" type="Script" id=8]
 [ext_resource path="res://icon.png" type="Texture" id=9]
-[ext_resource path="res://AsteroidGenerator.gd" type="Script" id=10]
+[ext_resource path="res://box.gd" type="Script" id=10]
+[ext_resource path="res://generator.gd" type="Script" id=11]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 41.2847, 34.2003 )
@@ -23,7 +24,16 @@ animations = [ {
 } ]
 
 [sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 2138.96, 1534.86 )
+extents = Vector2( 10, 4412.48 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 4890.69, 10 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 10, 4605.2 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 4493.42, 10 )
 
 [node name="Game" type="Node2D"]
 
@@ -52,17 +62,50 @@ scale = Vector2( 2, 2 )
 frames = SubResource( 2 )
 
 [node name="FirePosition" type="Node2D" parent="Player"]
-position = Vector2( 0, -45 )
+position = Vector2( 0, -61.3906 )
 
 [node name="Background" type="Node" parent="Player"]
+editor/display_folded = true
 script = ExtResource( 8 )
 
 [node name="icon" type="Sprite" parent="Player/Background"]
-position = Vector2( 214.006, 87.6515 )
+position = Vector2( 1891.29, -172.094 )
 texture = ExtResource( 9 )
 
-[node name="AsteroidGenerator" type="Node2D" parent="Player"]
+[node name="box" type="Area2D" parent="Player"]
 script = ExtResource( 10 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/AsteroidGenerator"]
+[node name="left" type="CollisionShape2D" parent="Player/box"]
+position = Vector2( -4000, 0 )
 shape = SubResource( 3 )
+
+[node name="up" type="CollisionShape2D" parent="Player/box"]
+position = Vector2( 0, -4000 )
+shape = SubResource( 6 )
+
+[node name="right" type="CollisionShape2D" parent="Player/box"]
+position = Vector2( 4000, 0 )
+shape = SubResource( 4 )
+
+[node name="down" type="CollisionShape2D" parent="Player/box"]
+position = Vector2( 0, 4000 )
+shape = SubResource( 5 )
+
+[node name="position" type="Node2D" parent="Player"]
+position = Vector2( 3000, 0 )
+
+[node name="Sprite" type="Sprite" parent="Player/position"]
+texture = ExtResource( 9 )
+
+[node name="generator" type="Timer" parent="Player"]
+process_mode = 0
+autostart = true
+script = ExtResource( 11 )
+
+[node name="Node2D2" type="Node2D" parent="."]
+position = Vector2( 1.00001e+006, 1e+006 )
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2( -1e+006, -1e+006 )
+[connection signal="body_shape_entered" from="Player/box" to="Player/box" method="_on_box_body_shape_entered"]
+[connection signal="timeout" from="Player/generator" to="Player/generator" method="_on_generator_timeout"]

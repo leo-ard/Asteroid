@@ -16,13 +16,15 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if(Input.is_action_just_pressed("break")):
+	if(Input.is_action_just_pressed("shoot")):
 		fire()
 	
 func _physics_process(delta):
 	var pos = get_viewport().get_mouse_position() - get_viewport().size / 2
 	var angle = pos.angle() + PI/2
 	rotation = angle
+	
+	print(position)
 	
 	# movement
 	
@@ -56,7 +58,7 @@ func fire() :
 	var bullet = BULLET.instance()
 	bullet.global_position = $FirePosition.global_position
 	bullet.global_rotation = global_rotation
-	var temp = linear_velocity + get_rotation_vector() * 1000
+	var temp =  get_rotation_vector() * 3000
 	bullet.velocity = temp
 	get_parent().add_child(bullet)
 
